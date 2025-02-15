@@ -5,11 +5,21 @@ print("")
 users = []
 
 def user_registration():
+  global users
+  
+  try:
+    with open("users.json", "r", encoding="utf-8") as arquivo:
+      users = json.load(arquivo)
+  except (FileNotFoundError, json.JSONDecodeError):
+    users = []
+  
   dados = {}
   dados['name'] = input("Nome completo: ")
   dados['age'] = input("Idade: ")
   
   users.append(dados)
+  with open("users.json", "w", encoding="utf-8") as arquivo:
+    json.dump(users, arquivo, indent=4, ensure_ascii=False)
 
 while True:
     print("Selecione uma opção:")
@@ -26,6 +36,3 @@ while True:
         print("Opção inválida")
 
 print(users)
-  
-with open("users.json", "w", encoding="utf-8") as arquivo:
-  json.dump(users, arquivo, indent=4, ensure_ascii=False)
