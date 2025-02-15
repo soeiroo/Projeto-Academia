@@ -30,4 +30,4 @@ print(users)
 with open("users.json", "w", encoding="utf-8") as arquivo:
   json.dump(users, arquivo, indent=4, ensure_ascii=False)
   
-  
+print("mexi no código")
