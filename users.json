@@ -1,10 +1,8 @@
 [
     {
-        "name": "Janaina",
-        "age": "18"
-    },
-    {
-        "name": "Pedro",
-        "age": "18"
+        "id": 1,
+        "name": "Pedro Israel  Gomes Soeiro",
+        "status": "Ativo",
+        "age": 14
     }
 ]
