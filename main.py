@@ -34,5 +34,11 @@ while True:
         break
     else:
         print("Opção inválida")
+    
+    salvar_usuario = input("Deseja salvar o usuário? (sim/não) ").lower()
+    if salvar_usuario == "sim":
+        break
+    else:
+        break
 
 print(users)
