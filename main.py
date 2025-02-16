@@ -22,8 +22,7 @@ def user_registration():
     dados['name'] = input("Nome completo: ")
     dados['age'] = int(input("Idade: "))
     dados['id'] = len(users) + 1
-    
-    #Esse return não está funcionando, procurar uma solução
+
     if ( dados['age'] < 16):
       print("Esse usuário não está apto para se registrar.")
       return
@@ -128,5 +127,4 @@ while True:
         break
     else:
         continue
-  
-  
+      
