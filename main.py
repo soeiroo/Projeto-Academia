@@ -1,5 +1,5 @@
 import json
-
+import os
 
 #Função que puxa as informações do {users.json} para a variável users. Usem!
 def users_db():
@@ -11,6 +11,8 @@ def users_db():
   except (FileNotFoundError, json.JSONDecodeError):
     users = []
 
+def clear():
+  os.system('cls')
 
 
 def user_registration():
@@ -21,6 +23,7 @@ def user_registration():
     dados = {}
     dados['name'] = input("Nome completo: ")
     dados['age'] = int(input("Idade: "))
+    #Criar funcionalidade que torna os ID's em números únicos para cada usuário
     dados['id'] = len(users) + 1
 
     if ( dados['age'] < 16):
@@ -35,6 +38,7 @@ def user_registration():
 
 def user_edition():
     global users  
+    
     
     users_db()
 
@@ -79,7 +83,10 @@ def users_remove():
       else:
         print("ID inválido/Não existente")
       
+def user_details():
+  users_db()
 
+  print("Detalhes ()")
 
 def users_list():
   global users
@@ -89,10 +96,8 @@ def users_list():
   except (FileNotFoundError, json.JSONDecodeError):
     users = []
   
-  counter = 0
   for user in users:
-    counter+=1
-    print(f"{counter} - {user['name']}")
+    print(f"{user['id']} - {user['name']}")
 
 
 while True:
@@ -108,17 +113,23 @@ while True:
     option = int(input("Escolha uma opção: "))
     
     if option == 1:
+      clear()
       user_registration()   
     elif option == 2:
+      clear()
       users_list()
     elif option == 3:
-        user_edition()
+      clear()
+      user_edition()
     elif option == 4:
+      clear()
       users_remove()
     elif option == 5:
+      clear()
       break
     elif option == 6:
-      users_db()
+      clear()
+      print("Use para testar")
     else:
         print("Opção inválida")
     
@@ -126,5 +137,6 @@ while True:
     if salvar_usuario == 'n':
         break
     else:
+        clear()
         continue
-      
+
