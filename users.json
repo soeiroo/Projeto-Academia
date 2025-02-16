@@ -1,22 +1,20 @@
 [
     {
-        "name": "Pedro",
-        "age": 17,
-        "id": 1
+        "status": "Ativo",
+        "name": "Marílio",
+        "age": "20",
+        "id": "1"
     },
     {
-        "name": "João",
-        "age": 18,
-        "id": 3
+        "status": "Inativo",
+        "name": "Janaina Alves Moura",
+        "age": "20",
+        "id": "2"
     },
     {
-        "name": "Maria",
-        "age": 24,
-        "id": 4
-    },
-    {
-        "name": "Flávio",
-        "age": 25,
-        "id": 5
+        "status": "Ativo",
+        "name": "Kennedy Soares",
+        "age": "17",
+        "id": "3"
     }
 ]
