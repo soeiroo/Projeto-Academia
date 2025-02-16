@@ -11,13 +11,34 @@ def users_db():
     users = []
 
 
+
+def user_registration():
+    global users 
+    
+    users_db()
+    
+    dados = {}
+    dados['name'] = input("Nome completo: ")
+    dados['age'] = input("Idade: ")
+    dados['id'] = len(users) + 1  
+    
+    #Esse return não está funcionando, procurar uma solução
+    #if ( dados["age"] > 16):
+    #  print("Esse usuário não está apto para se registrar.")
+    #  awaiting = input(" - Digite qualquer coisa para voltar - ") 
+    #  return
+
+    users.append(dados)
+    with open("users.json", "w", encoding="utf-8") as arquivo:
+        json.dump(users, arquivo, indent=4, ensure_ascii=False)
+    print("Usuário cadastrado com sucesso!")
+#Função que puxa as informações do {users.json} para a variável users. Usem!
+
+
 def user_edition():
     global users  
-    try:
-        with open("./users.json", "r", encoding="utf-8") as file:
-            users = json.load(file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        users = []
+    
+    users_db()
 
     dados = {}
     id = input("Id do usuario: ")
@@ -38,29 +59,8 @@ def user_edition():
         print("Usuário atualizado com sucesso!")
     else:
         print("Usuário não encontrado!")
-
-def user_registration():
-    global users 
-    
-    users_db()
-    
-    dados = {}
-    dados['name'] = input("Nome completo: ")
-    dados['age'] = input("Idade: ")
-    dados['id'] = len(users) + 1  
-    
-    #Esse return não está funcionando, procurar uma solução
-    if ( dados["age"] > 16):
-      print("Esse usuário não está apto para se registrar.")
-      awaiting = input(" - Digite qualquer coisa para voltar - ") 
-      return
-
-    users.append(dados)
-    with open("users.json", "w", encoding="utf-8") as arquivo:
-        json.dump(users, arquivo, indent=4, ensure_ascii=False)
-    print("Usuário cadastrado com sucesso!")
-#Função que puxa as informações do {users.json} para a variável users. Usem!
-
+        
+        
 def users_remove():
   global users
 
@@ -77,10 +77,10 @@ def users_remove():
           json.dump(users, arquivo, indent=4, ensure_ascii=False)
         
         print("Usuário removido com sucesso!")
-        awaiting = input(" - Digite qualquer coisa para voltar - ")
+        
     else:
       print("ID inválido/Não existente")
-      awaiting = input(" - Digite qualquer coisa para voltar - ")
+      
 
 
 def users_list():
@@ -121,8 +121,8 @@ while True:
     else:
         print("Opção inválida")
     
-    salvar_usuario = input("Deseja salvar as alterações? (sim/não) ").lower()
-    if salvar_usuario == "sim":
+    salvar_usuario = input("Deseja voltar ao menu principal? (Y/N) ").lower()
+    if salvar_usuario == 'n':
         break
     else:
         continue
