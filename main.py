@@ -1,6 +1,7 @@
 import json
 
 
+#Função que puxa as informações do {users.json} para a variável users. Usem!
 def users_db():
   global users
   
@@ -19,20 +20,18 @@ def user_registration():
     
     dados = {}
     dados['name'] = input("Nome completo: ")
-    dados['age'] = input("Idade: ")
-    dados['id'] = len(users) + 1  
+    dados['age'] = int(input("Idade: "))
+    dados['id'] = len(users) + 1
     
     #Esse return não está funcionando, procurar uma solução
-    #if ( dados["age"] > 16):
-    #  print("Esse usuário não está apto para se registrar.")
-    #  awaiting = input(" - Digite qualquer coisa para voltar - ") 
-    #  return
+    if ( dados['age'] < 16):
+      print("Esse usuário não está apto para se registrar.")
+      return
 
     users.append(dados)
     with open("users.json", "w", encoding="utf-8") as arquivo:
         json.dump(users, arquivo, indent=4, ensure_ascii=False)
     print("Usuário cadastrado com sucesso!")
-#Função que puxa as informações do {users.json} para a variável users. Usem!
 
 
 def user_edition():
@@ -43,7 +42,7 @@ def user_edition():
     dados = {}
     id = input("Id do usuario: ")
     dados['name'] = input("Novo nome completo: ")
-    dados['age'] = input("Nova idade: ")
+    dados['age'] = int(input("Nova idade: "))
     dados['id'] = int(id)
     positionOfUser = -1
     for index, user in enumerate(users):
@@ -68,18 +67,18 @@ def users_remove():
     
   temp_ID = int(input("Insira o ID do usuário que deseja remover: "))
   for user in users:
-    if ( user["id"] == temp_ID ):
+    if ( user['id'] == temp_ID ):
       print(f"Tem certeza que deseja remover a conta de {user['name']} ?")
-      response = input("(Y/N): ")
-      if ( response == 'y' or 'Y' ):
+      response = input("(Y/N): ").lower()
+      if ( response == 'y' ):
         users.remove(user)
         with open("users.json", "w", encoding="utf-8") as arquivo:
           json.dump(users, arquivo, indent=4, ensure_ascii=False)
         
         print("Usuário removido com sucesso!")
         
-    else:
-      print("ID inválido/Não existente")
+      else:
+        print("ID inválido/Não existente")
       
 
 
@@ -105,6 +104,7 @@ while True:
     print("3 - Editar usuários")
     print("4 - Remover informações de um usuário")
     print("5 - Sair")
+    print("6 - Teste")
     print("--------------------")
     option = int(input("Escolha uma opção: "))
     
@@ -118,6 +118,8 @@ while True:
       users_remove()
     elif option == 5:
       break
+    elif option == 6:
+      users_db()
     else:
         print("Opção inválida")
     
@@ -126,4 +128,5 @@ while True:
         break
     else:
         continue
-
+  
+  
