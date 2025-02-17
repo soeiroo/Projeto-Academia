@@ -28,12 +28,13 @@ def user_registration():
     console.log(f"Acessando banco de dados...", style="bold underline")
     users_db()
     
-    dados = {}
-    dados['status'] = "Ativo"
-    dados['name'] = input("Nome completo: ")
-    dados['age'] = input("Idade: ")
-    #Criar funcionalidade que torna os ID's em números únicos para cada usuário
-    max_id = int(max((user.get('id', 0) for user in users), default=0))
+    dados = {
+      "status": "Ativo",
+      "name": input("Nome completo: "),
+      "age": input("Idade: ")
+    }
+    
+    max_id = max((int(user.get('id', 0)) for user in users), default=0)
     dados['id'] = max_id + 1
     
     temp_dados = dados.copy()
