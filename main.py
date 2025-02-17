@@ -32,7 +32,8 @@ def user_registration():
     dados['name'] = input("Nome completo: ")
     dados['age'] = input("Idade: ")
     #Criar funcionalidade que torna os ID's em números únicos para cada usuário
-    dados['id'] = len(users) + 1
+    max_id = int(max((user.get('id', 0) for user in users), default=0))
+    dados['id'] = max_id + 1
     
     temp_dados = dados.copy()
     if ( int(temp_dados['age']) < 16):
@@ -60,48 +61,104 @@ def user_tableDB():
     table.add_row(user['id'], user['name'], user['age'], user['status'])
   
   console.print(table)
+    
+def statusChange(userID):  
+  dados = {}
+  users_db()
   
+  console.print("Esse usuário atualmente está:\n[1] Ativo\n[2] Inativo")
+  response = int(input(": "))
+  
+  
+  try:  # Converte para inteiro
+    match response:
+      case 1:
+          dados["status"] = "Ativo"
+      case 2:
+          dados["status"] = "Inativo"
+      case _:
+          print('Entrada inválida, tente novamente.')
+  except ValueError:
+    console.print("Entrada [red]inválida![/] Digite um número [cyan]válido[/].")
+  
+  for user in users:
+    if user["id"] == str(userID):
+      user["status"] = dados["status"]
+    with open("users.json", "w", encoding="utf-8") as arquivo:
+        json.dump(users, arquivo, indent=4, ensure_ascii=False)
+  print("Usuário atualizado com sucesso!")
+
+#Em progresso...
+#def nameChange(userID):
+#  def statusChange(userID):  
+#    dados = {}
+#    users_db()
+#    
+#    console.print("Esse usuário atualmente está:\n[1] Ativo\n[2] Inativo")
+#    response = int(input(": "))
+    
+    
+#    try:  # Converte para inteiro
+#      match response:
+#        case 1:
+#            dados["status"] = "Ativo"
+#        case 2:
+#            dados["status"] = "Inativo"
+#        case _:
+#            print('Entrada inválida, tente novamente.')
+#    except ValueError:
+#      console.print("Entrada [red]inválida![/] Digite um número [cyan]válido[/].")
+#    
+#    for user in users:
+#      if user["id"] == str(userID):
+#        user["status"] = dados["status"]
+#      with open("users.json", "w", encoding="utf-8") as arquivo:
+#          json.dump(users, arquivo, indent=4, ensure_ascii=False)
+#    print("Usuário atualizado com sucesso!")
+    
 def user_edition():
-    global users  
+  global users  
     
     
-    users_db()
+  users_db()
 
-    dados = {}
-    id = input("Id do usuario: ")
-    console.print("Esse usuário atualmente está:\n[1] Ativo\n[2] Inativo")
-    response = int(input(": "))
-    
-    try:  # Converte para inteiro
-      match response:
-        case 1:
-            dados["status"] = "Ativo"
-        case 2:
-            dados["status"] = "Inativo"
-        case _:
-            print('Entrada inválida, tente novamente.')
-    except ValueError:
-      print("Entrada inválida! Digite um número válido.")
-        
-    dados['name'] = input("Novo nome completo: ")
-    dados['age'] = input("Nova idade: ")
-    
-    
-    dados['id'] = id
-    positionOfUser = -1
-    for index, user in enumerate(users):
-      if "id" in user:
-          if user["id"] == id:
-              positionOfUser = index
-              break
 
-    if positionOfUser != -1:  
-        users[positionOfUser] = dados  
-        with open("users.json", "w", encoding="utf-8") as arquivo:
-            json.dump(users, arquivo, indent=4, ensure_ascii=False)
-        print("Usuário atualizado com sucesso!")
-    else:
-        print("Usuário não encontrado!")
+  dados = {}
+  id = input("ID do usuario: ")
+  for user in users:
+    if ( user['id'] == str(id) ):
+      console.print(f"[bold]O que você deseja modificar do usuário[/] [bold deep_sky_blue1]{user['name']}[/]?")
+      console.print("[1] Alterar seu Status")
+      console.print("[2] Alterar seu Nome")
+      console.print("[3] Alterar sua idade")
+      
+    
+  response = int(input(": "))
+  try:
+    match response:
+      case 1:
+        statusChange(id)
+  except (ValueError):
+    console.print("Entrada [red]inválida![/] Digite um número [cyan]válido[/].")
+      
+      
+  dados['name'] = input("Novo nome completo: ")
+  dados['age'] = input("Nova idade: ")
+  dados['id'] = id
+#  positionOfUser = -1
+#  for index, user in enumerate(users):
+#    if "id" in user:
+#        if user["id"] == id:
+#            positionOfUser = index
+#            break
+
+#  if positionOfUser != -1:  
+#      users[positionOfUser] = dados  
+#      with open("users.json", "w", encoding="utf-8") as arquivo:
+#          json.dump(users, arquivo, indent=4, ensure_ascii=False)
+#      print("Usuário atualizado com sucesso!")
+#  else:
+#      print("Usuário não encontrado!")
         
         
 def users_remove():
@@ -123,14 +180,8 @@ def users_remove():
         
       else:
         print("ID inválido/Não existente")
-      
-def user_details():
-  users_db()
 
-  print("Detalhes ()")
-
-
-#Foi substituido pelo 
+#Foi substituido pelo users_tableDB
 #def users_list():
 #  global users
 #  try:
