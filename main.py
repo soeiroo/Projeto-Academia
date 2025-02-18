@@ -52,17 +52,69 @@ def user_registration():
 def user_tableDB():
   users_db()
   
-  table = Table(title="Informações dos clientes")
   
-  table.add_column("ID", style="orange3")
-  table.add_column("Name", style="deep_sky_blue1")
-  table.add_column("Idade", style="deep_sky_blue1")
-  table.add_column("Status", style="magenta")
+  current_page = 0
+  users_per_page = 10
+  total_users = len(users)
+  if ( total_users > 10):
+    total_pages = int(total_users / 10) + 1
+  else:
+    total_pages = 1
+  
+  while True:  
+    table = Table(title="Informações dos clientes", caption=f"Página: {current_page + 1}/{total_pages}\n")
+
+    table.add_column("ID", style="orange3", justify="center", min_width=5, max_width=10)
+    table.add_column("Nome", style="deep_sky_blue1", min_width=30, max_width=50)
+    table.add_column("Idade", style="deep_sky_blue1", justify="center", min_width=5, max_width=7)
+    table.add_column("Status", style="magenta", justify="center", min_width=10, max_width=15)
+
+    start_index = current_page * users_per_page
+    end_index = min(start_index + users_per_page, total_users)
+
+    for user in users[start_index:end_index]:
+      table.add_row(str(user['id']), user['name'], str(user['age']), user['status'])
+  
+    clear()
+    console.print(table)
+  
+    console.print("[1] [bold orange3]Próxima Página[/]")
+    console.print("[2] [bold orange3]Página anterior[/]")
+    console.print("[3] [bold]Sair")
+    response = int(input(": "))
+  
+    match response:
+      case 1:
+        if current_page == total_pages:
+          console.print("[bold]Não há mais páginas")
+        else:
+          current_page +=1
+      case 2:
+        if current_page == 1:
+          current_page -=2
+        else:
+          current_page -=1
+      case 3:
+        break
+  
+def user_infoCheck():
+  users_db()
+  
+  userID = int(input("ID do cliente\n: "))
+  
+  table = Table(title="Informações do cliente")
+  
+  table.add_column("ID", style="orange3", justify="center")
+  table.add_column("Nome", style="deep_sky_blue1")
+  table.add_column("Idade", style="deep_sky_blue1", justify="center")
+  table.add_column("Status", style="magenta", justify="center")
   
   for user in users:
-    table.add_row(user['id'], user['name'], user['age'], user['status'])
+    if user["id"] == str(userID):
+      table.add_row(user['id'], user['name'], user['age'], user['status'])
   
   console.print(table)
+    
     
 def statusChange(userID):  
   dados = {}
@@ -90,7 +142,7 @@ def statusChange(userID):
         json.dump(users, arquivo, indent=4, ensure_ascii=False)
   print("Usuário atualizado com sucesso!")
 
-#Em progresso...
+
 def nameChange(userID):  
     dados = {}
     users_db()
@@ -127,9 +179,7 @@ def ageChange(userID):
 def user_edition():
   global users  
     
-    
   users_db()
-
 
   dados = {}
   id = input("ID do usuario: ")
@@ -157,15 +207,19 @@ def user_edition():
       
         
 def users_remove():
-  global users
-
   users_db()
-    
-  temp_ID = input("Insira o ID do usuário que deseja remover: ")
+  
+  user_found = False
+  
+  temp_ID = console.input("[bold]Insira o [orange3]ID[/] do [deep_sky_blue1]usuário[/] que deseja [red]remover[/]: ")
+  
   for user in users:
     if ( user['id'] == temp_ID ):
-      print(f"Tem certeza que deseja remover a conta de {user['name']} ?")
-      response = input("(Y/N): ").lower()
+      user_found = True
+      
+      console.print(f"[bold]Tem certeza que deseja remover a conta de [deep_sky_blue1]{user['name']}[/]?")
+      response = console.input("[orange3](Y/N):[/] ").lower()
+      
       if ( response == 'y' ):
         users.remove(user)
         with open("users.json", "w", encoding="utf-8") as arquivo:
@@ -174,8 +228,11 @@ def users_remove():
         print("Usuário removido com sucesso!")
         
       else:
-        print("ID inválido/Não existente")
-
+        console.print("[bold]Operação [red]cancelada[/].")
+  if not user_found:
+    console.print("[bold red]ID inválido ou não existente.[/]")
+      
+      
 #Foi substituido pelo users_tableDB
 #def users_list():
 #  global users
@@ -194,10 +251,10 @@ while True:
     console.print("--------------------")
     console.print("1 - Cadastrar novo usuário", style="bold pale_green1")
     console.print("2 - Listar usuários", style="bold deep_sky_blue1")
-    console.print("3 - Editar usuários", style="bold")
-    console.print("4 - Remover usuários", style="bold red")
-    console.print("5 - Sair", style="bold")
-    console.print("6 - Teste")
+    console.print("3 - Consultar informações de um usuário", style="bold deep_sky_blue2")
+    console.print("4 - Editar usuários", style="bold")
+    console.print("5 - Remover usuários", style="bold red")
+    console.print("6 - Sair", style="bold")
     console.print("--------------------")
     option = int(input("Escolha uma opção: "))
     
@@ -209,16 +266,16 @@ while True:
       user_tableDB()
     elif option == 3:
       clear()
-      user_edition()
+      user_infoCheck()
     elif option == 4:
       clear()
-      users_remove()
+      user_edition()
     elif option == 5:
       clear()
-      break
+      users_remove()
     elif option == 6:
       clear()
-      print("Teste")
+      break
     else:
         print("Opção inválida")
     
