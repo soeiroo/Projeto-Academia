@@ -23,47 +23,45 @@ def clear():
 clear()
 
 def user_registration():
-    global users 
+  global users 
     
-    console.log(f"Acessando banco de dados...", style="bold underline")
-    users_db()
+  console.log(f"Acessando banco de dados...", style="bold underline")
+  users_db()
     
-    dados = {
+  dados = {
       "status": "Ativo",
       "name": input("Nome completo: "),
       "age": input("Idade: ")
-    }
+  }
     
-    max_id = max((int(user.get('id', 0)) for user in users), default=0)
-    dados['id'] = max_id + 1
+  max_id = max((int(user.get('id', 0)) for user in users), default=0)
+  dados['id'] = max_id + 1
     
-    temp_dados = dados.copy()
-    if ( int(temp_dados['age']) < 16):
-      print("Esse usuário não está apto para se registrar.")
-      return
+  temp_dados = dados.copy()
+  if ( int(temp_dados['age']) < 16):
+    print("Esse usuário não está apto para se registrar.")
+    return
     
-    dados['id'] = str(temp_dados['id'])
+  dados['id'] = str(temp_dados['id'])
 
-    users.append(dados)
-    with open("users.json", "w", encoding="utf-8") as arquivo:
-        json.dump(users, arquivo, indent=4, ensure_ascii=False)
-    console.print("Usuário cadastrado com sucesso!", style="success")
+  users.append(dados)
+  with open("users.json", "w", encoding="utf-8") as arquivo:
+    json.dump(users, arquivo, indent=4, ensure_ascii=False)
+  console.print("Usuário cadastrado com sucesso!", style="success")
 
 def user_tableDB():
   users_db()
   
-  
   current_page = 0
   users_per_page = 10
   total_users = len(users)
-  if ( total_users > 10):
-    total_pages = int(total_users / 10) + 1
-  else:
-    total_pages = 1
-  
-  while True:  
-    table = Table(title="Informações dos clientes", caption=f"Página: {current_page + 1}/{total_pages}\n")
+  total_pages = (total_users + users_per_page - 1) // users_per_page
 
+  console = Console()
+
+  while True:
+      # Cria uma nova tabela a cada iteração
+    table = Table(title="Informações dos clientes", caption=f"Página: {current_page + 1}/{total_pages}\n")
     table.add_column("ID", style="orange3", justify="center", min_width=5, max_width=10)
     table.add_column("Nome", style="deep_sky_blue1", min_width=30, max_width=50)
     table.add_column("Idade", style="deep_sky_blue1", justify="center", min_width=5, max_width=7)
@@ -72,30 +70,39 @@ def user_tableDB():
     start_index = current_page * users_per_page
     end_index = min(start_index + users_per_page, total_users)
 
+        # Adiciona as linhas à tabela
     for user in users[start_index:end_index]:
       table.add_row(str(user['id']), user['name'], str(user['age']), user['status'])
-  
+
     clear()
     console.print(table)
-  
+
     console.print("[1] [bold orange3]Próxima Página[/]")
     console.print("[2] [bold orange3]Página anterior[/]")
-    console.print("[3] [bold]Sair")
-    response = int(input(": "))
-  
+    console.print("[3] [bold]Sair[/]")
+
+    try:
+      response = int(input(": "))
+    except ValueError:
+      console.print("[bold red]Entrada inválida! Por favor, insira um número.[/]")
+      continue
+
     match response:
       case 1:
-        if current_page == total_pages:
-          console.print("[bold]Não há mais páginas")
+        if current_page < total_pages - 1:
+          current_page += 1
         else:
-          current_page +=1
+          console.print("[bold]Não há mais páginas[/]")
       case 2:
-        if current_page == 1:
-          current_page -=2
+        if current_page > 0:
+          current_page -= 1
         else:
-          current_page -=1
+          console.print("[bold]Você já está na primeira página[/]")
       case 3:
         break
+      case _:
+        console.print("[bold red]Opção inválida! Por favor, escolha uma opção válida.[/]")
+    
   
 def user_infoCheck():
   users_db()
