@@ -60,7 +60,6 @@ def user_tableDB():
   console = Console()
 
   while True:
-      # Cria uma nova tabela a cada iteração
     table = Table(title="Informações dos clientes", caption=f"Página: {current_page + 1}/{total_pages}\n")
     table.add_column("ID", style="orange3", justify="center", min_width=5, max_width=10)
     table.add_column("Nome", style="deep_sky_blue1", min_width=30, max_width=50)
@@ -70,7 +69,7 @@ def user_tableDB():
     start_index = current_page * users_per_page
     end_index = min(start_index + users_per_page, total_users)
 
-        # Adiciona as linhas à tabela
+    # Adiciona as linhas à tabela
     for user in users[start_index:end_index]:
       table.add_row(str(user['id']), user['name'], str(user['age']), user['status'])
 
@@ -175,7 +174,6 @@ def ageChange(userID):
   
   dados["age"] = str(response)
   
-  
   for user in users:
     if user["id"] == str(userID):
       user["age"] = dados["age"]
@@ -189,30 +187,36 @@ def user_edition():
   users_db()
 
   dados = {}
-  id = input("ID do usuario: ")
+
+  user_found = False
+  
+  id = console.input("[bold]Insira o [orange3]ID[/] do usuário que deseja editar: ")
   for user in users:
     if ( user['id'] == str(id) ):
+      user_found = True
       console.print(f"[bold]O que você deseja modificar do usuário[/] [bold deep_sky_blue1]{user['name']}[/]?")
-      console.print("[1] Alterar seu Status")
-      console.print("[2] Alterar seu Nome")
-      console.print("[3] Alterar sua idade")
+      console.print("[1] [orange3]Alterar seu Status")
+      console.print("[2] [orange3]Alterar seu Nome")
+      console.print("[3] [orange3]Alterar sua idade")
       
-    
-  response = int(input(": "))
-  try:
-    match response:
-      case 1:
-        statusChange(id)
-      case 2:
-        nameChange(id)
-      case 3:
-        ageChange(id)
-  except (ValueError):
-    console.print("Entrada [red]inválida![/] Digite um número [cyan]válido[/].")
-    
-  dados['id'] = id
-      
+      response = int(console.input("[bold]: "))
+      try:
+        match response:
+          case 1:
+            statusChange(id)
+          case 2:
+            nameChange(id)
+          case 3:
+            ageChange(id)
+      except (ValueError):
+        console.print("Entrada [red]inválida![/] Digite um número [cyan]válido[/].")
         
+      dados['id'] = id
+      
+  if user_found == False:
+    console.print("[bold orange3]ID[/] [bold red]não encontrado![/]")
+    
+      
 def users_remove():
   users_db()
   
@@ -256,12 +260,12 @@ def users_remove():
 while True:
     console.print("-------[bold]FITGYM[/]-------")
     console.print("--------------------")
-    console.print("1 - Cadastrar novo usuário", style="bold pale_green1")
-    console.print("2 - Listar usuários", style="bold deep_sky_blue1")
-    console.print("3 - Consultar informações de um usuário", style="bold deep_sky_blue2")
-    console.print("4 - Editar usuários", style="bold")
-    console.print("5 - Remover usuários", style="bold red")
-    console.print("6 - Sair", style="bold")
+    console.print("1 - [bold pale_green1]Cadastrar novo usuário[/]")
+    console.print("2 - [bold deep_sky_blue1]Listar usuários[/]")
+    console.print("3 - [bold deep_sky_blue2]Consultar informações de um usuário[/]")
+    console.print("4 - [bold]Editar usuários[/]")
+    console.print("5 - [bold red]Remover usuários[/]")
+    console.print("6 - [bold]Sair[/]")
     console.print("--------------------")
     option = int(input("Escolha uma opção: "))
     
