@@ -39,7 +39,7 @@ Este é um projeto básico para gestão de usuários em uma academia, facilitand
 
 ## Como Usar
 
-1. Ao executar o `main.py`, o sistema exibirá um menu com as seguintes opções:
+1. Ao executar o `main.py`, o sistema exibirá um menu com algumas dessas seguintes opções:
 
    ```
    1 - Cadastrar novo usuário
